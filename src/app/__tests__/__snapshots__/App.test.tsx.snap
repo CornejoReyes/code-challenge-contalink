@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App component should render correctly 1`] = `
+<Text
+  data-style=""
+  dataSet={
+    {
+      "style": "",
+    }
+  }
+  size="md"
+  style={
+    [
+      undefined,
+      {},
+      undefined,
+      {
+        "color": "#525252",
+        "fontFamily": undefined,
+        "fontStyle": "normal",
+        "fontWeight": "400",
+        "letterSpacing": 0,
+      },
+      undefined,
+      {},
+      undefined,
+      {
+        "fontSize": 16,
+      },
+      undefined,
+      undefined,
+    ]
+  }
+>
+  Hello There
+</Text>
+`;
