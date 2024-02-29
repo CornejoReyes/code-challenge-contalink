@@ -1,10 +1,19 @@
 import { config } from '@gluestack-ui/config';
-import { GluestackUIProvider, Text } from '@gluestack-ui/themed';
+import { GluestackUIProvider } from '@gluestack-ui/themed';
+import { NavigationContainer } from '@react-navigation/native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AppNavigator } from './navigation';
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
     <GluestackUIProvider config={config}>
-      <Text>Hello There</Text>
+      <NavigationContainer>
+        <QueryClientProvider client={queryClient}>
+          <AppNavigator />
+        </QueryClientProvider>
+      </NavigationContainer>
     </GluestackUIProvider>
   );
 }
