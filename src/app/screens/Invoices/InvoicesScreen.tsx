@@ -1,38 +1,33 @@
 import {
-  Badge,
-  BadgeText,
   Box,
   Button,
   ButtonIcon,
-  Card,
+  Center,
   FlatList,
-  HStack,
   Heading,
+  Spinner,
   Text,
-  VStack,
 } from '@gluestack-ui/themed';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { ListRenderItem } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { DatePicker, TopBar } from '~/app/components';
 import FunnelIcon from '~/assets/funnel.svg';
 import { Invoice, getInvoicesByDate } from '~/data/invoices';
-import { formatNumberAsCurrency, formatStringAsDate } from '~/utils/formatters';
-
-const ITEM_HEIGHT = 70;
+import { formatStringAsDate } from '~/utils/formatters';
+import EmptyInvoiceList from './EmptyInvoiceList';
+import InvoiceListItem, { ITEM_HEIGHT } from './InvoiceListItem';
 
 export default function InvoicesScreen() {
   const insets = useSafeAreaInsets();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [startDate, setStartDate] = useState<string>(
-    dayjs('2022-01-03').format('YYYY-MM-DD'),
+    dayjs().format('YYYY-MM-DD'),
   );
-  const [endDate, setEndDate] = useState<string>(
-    dayjs('2022-01-03').format('YYYY-MM-DD'),
-  );
-  const { data } = useQuery({
+  const [endDate, setEndDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
+  const { data, isLoading } = useQuery({
     queryKey: ['invoices', { startDate, endDate }],
     queryFn: () => getInvoicesByDate(startDate!, endDate!),
     enabled: !!startDate && !!endDate,
@@ -62,35 +57,24 @@ export default function InvoicesScreen() {
     return item.invoice_number;
   };
 
-  const itemRenderer: ListRenderItem<Invoice> = useCallback(({ item }) => {
+  const itemRenderer: ListRenderItem<Invoice> = ({ item }) => {
+    return <InvoiceListItem invoice={item} />;
+  };
+
+  const emptyListRenderer = () => {
+    return <EmptyInvoiceList />;
+  };
+
+  if (isLoading) {
     return (
-      <Card my="$2" variant="ghost" bg="$white" rounded="$xl" h={ITEM_HEIGHT}>
-        <HStack space="sm" alignItems="center" justifyContent="space-between">
-          <HStack alignItems="center" space="sm">
-            <VStack space="xs">
-              <Text fontWeight="$bold" fontSize="$sm">
-                {item.invoice_number}
-              </Text>
-              <Text fontSize="$xs" color="$textDark500">
-                {formatStringAsDate(
-                  item.invoice_date,
-                  'DD [de] MMM [del] YYYY',
-                )}
-              </Text>
-            </VStack>
-          </HStack>
-          <Badge
-            size="md"
-            variant="solid"
-            borderRadius="$full"
-            action={item.status === 'Vigente' ? 'success' : 'error'}>
-            <BadgeText>{item.status}</BadgeText>
-          </Badge>
-          <Text>{formatNumberAsCurrency(item.total)}</Text>
-        </HStack>
-      </Card>
+      <Box bg="$backgroundLight50" flex={1}>
+        <TopBar />
+        <Center flex={1}>
+          <Spinner size="small" color="$purple500" />
+        </Center>
+      </Box>
     );
-  }, []);
+  }
 
   return (
     <Box bg="$backgroundLight50" flex={1}>
@@ -133,6 +117,7 @@ export default function InvoicesScreen() {
         windowSize={9}
         removeClippedSubviews
         getItemLayout={getItemListLayout}
+        ListEmptyComponent={emptyListRenderer}
       />
       <DatePicker
         isOpen={isModalOpen}
