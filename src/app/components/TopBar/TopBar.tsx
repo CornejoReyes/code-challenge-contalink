@@ -24,7 +24,7 @@ export default function TopBar() {
       pt={inset.top}
       px="$4"
       pb="$2">
-      <Heading fontSize="$xl" color="$textDark900">
+      <Heading fontSize="$xl" color="$textDark900" testID="topbar-greetings">
         Hola, {name}
       </Heading>
     </Box>

@@ -50,7 +50,8 @@ export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
               color="$textDark700"
               textAlign="center"
               fontSize="$4xl"
-              lineHeight="$4xl">
+              lineHeight="$4xl"
+              testID="welcome-greetings">
               ¡Hola!{'\n'}¿Quién eres?
             </Heading>
             <Input variant="underlined" size="xl" w="80%">
